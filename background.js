@@ -3,7 +3,8 @@ let currentRules = [];
 function parseFilters(filters) {
   const rules = [];
   const cssRules = [];
-  let ruleId = 1;
+  // Start rule IDs from a higher number to avoid conflicts with any default rules
+  let ruleId = 1000;
 
   filters.split('\n').forEach(line => {
     line = line.trim();
@@ -49,31 +50,56 @@ function parseFilters(filters) {
   return { networkRules: rules, cssRules };
 }
 
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+function handleMessage(message, sender, sendResponse) {
   if (message.action === 'updateFilters') {
     const { networkRules, cssRules } = parseFilters(message.filters);
 
-    // Update network rules
-    chrome.declarativeNetRequest.updateDynamicRules({
-      removeRuleIds: currentRules.map(rule => rule.id),
-      addRules: networkRules
+    // Get all existing dynamic rules first
+    chrome.declarativeNetRequest.getDynamicRules(existingRules => {
+      const existingRuleIds = existingRules.map(rule => rule.id);
+
+      // Update network rules
+      chrome.declarativeNetRequest.updateDynamicRules({
+        removeRuleIds: existingRuleIds,
+        addRules: networkRules
+      }, () => {
+        if (chrome.runtime.lastError) {
+          console.error('Error updating rules:', chrome.runtime.lastError);
+        } else {
+          currentRules = networkRules;
+          // Store CSS rules
+          chrome.storage.sync.set({ cssRules: cssRules });
+        }
+      });
     });
-    currentRules = networkRules;
-
-    // Store CSS rules
-    chrome.storage.sync.set({ cssRules: cssRules });
   }
-});
+}
 
-// Load filters on startup
-chrome.storage.sync.get(['filters'], (result) => {
+function handleStorageLoad(result) {
   if (result.filters) {
     const { networkRules, cssRules } = parseFilters(result.filters);
-    chrome.declarativeNetRequest.updateDynamicRules({
-      removeRuleIds: currentRules.map(rule => rule.id),
-      addRules: networkRules
+
+    // Get all existing dynamic rules first
+    chrome.declarativeNetRequest.getDynamicRules(existingRules => {
+      const existingRuleIds = existingRules.map(rule => rule.id);
+
+      chrome.declarativeNetRequest.updateDynamicRules({
+        removeRuleIds: existingRuleIds,
+        addRules: networkRules
+      }, () => {
+        if (chrome.runtime.lastError) {
+          console.error('Error updating rules:', chrome.runtime.lastError);
+        } else {
+          currentRules = networkRules;
+          chrome.storage.sync.set({ cssRules: cssRules });
+        }
+      });
     });
-    currentRules = networkRules;
-    chrome.storage.sync.set({ cssRules: cssRules });
   }
-});
+}
+
+// Register named functions as listeners
+chrome.runtime.onMessage.addListener(handleMessage);
+
+// Load filters on startup
+chrome.storage.sync.get(['filters'], handleStorageLoad);
