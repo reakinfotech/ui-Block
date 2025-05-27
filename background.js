@@ -36,7 +36,7 @@ function parseFilters(filters, imageOpacity, videoOpacity, customOpacity, custom
 
   return { cssRules };
 }
-
+/*
 // Track blocked requests using declarativeNetRequest
 chrome.declarativeNetRequest.onRuleMatchedDebug?.addListener((info) => {
   if (info.action.type === 'block') {
@@ -47,7 +47,7 @@ chrome.declarativeNetRequest.onRuleMatchedDebug?.addListener((info) => {
     }, 5 * 60 * 1000);
   }
 });
-
+*/
 function handleMessage(message, sender, sendResponse) {
   if (message.action === 'updateFilters') {
     const { cssRules } = parseFilters(
