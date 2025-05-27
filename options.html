@@ -1,61 +1,238 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Content Blocker Settings</title>
+  <title>UI Block Options</title>
   <style>
     body {
-      width: 500px;
-      padding: 20px;
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 0 20px;
     }
-    textarea {
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+      padding: 20px;
+      background: linear-gradient(135deg, #4CAF50, #2196F3);
+      border-radius: 8px;
+      color: white;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+    }
+    .header img {
+      width: 64px;
+      height: 64px;
+      border-radius: 12px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    .header-content {
+      text-align: left;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 2.5em;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+    }
+    .header p {
+      margin: 10px 0 0;
+      font-size: 1.1em;
+      opacity: 0.9;
+    }
+    .container {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .section {
+      background: #f5f5f5;
+      padding: 20px;
+      border-radius: 8px;
+    }
+    .section h2 {
+      margin-top: 0;
+      color: #333;
+    }
+    .status {
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 4px;
+    }
+    .status.success {
+      background-color: #e8f5e9;
+      color: #2e7d32;
+    }
+    .status.error {
+      background-color: #ffebee;
+      color: #c62828;
+    }
+    .opacity-control {
+      margin: 15px 0;
+    }
+    .opacity-control label {
+      display: block;
+      margin-bottom: 5px;
+      color: #666;
+    }
+    .opacity-control input[type="range"] {
       width: 100%;
-      height: 300px;
-      margin-bottom: 10px;
+    }
+    .opacity-value {
+      text-align: center;
+      font-size: 14px;
+      color: #666;
+      margin-top: 5px;
+    }
+    .opacity-controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .custom-selectors {
+      margin: 15px 0;
+    }
+    .custom-selectors label {
+      display: block;
+      margin-bottom: 5px;
+      color: #666;
+    }
+    .custom-selectors textarea {
+      width: 100%;
+      height: 80px;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      resize: vertical;
+    }
+    .custom-selectors .help-text {
+      font-size: 12px;
+      color: #666;
+      margin-top: 5px;
+    }
+    .domain-list {
+      margin: 15px 0;
+    }
+    .domain-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 8px 0;
+      padding: 12px;
+      background: #fff;
+      border-radius: 4px;
+    }
+    .domain-item input[type="text"] {
+      flex: 1;
+      padding: 5px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    .domain-item button {
+      background: #ff4444;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .add-domain {
+      margin-top: 10px;
+    }
+    .add-domain button {
+      background: #4CAF50;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .action-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background-color 0.3s;
+    }
+    .button.primary {
+      background-color: #4CAF50;
+      color: white;
+    }
+    .button.primary:hover {
+      background-color: #45a049;
+    }
+    .button.secondary {
+      background-color: #2196F3;
+      color: white;
+    }
+    .button.secondary:hover {
+      background-color: #1976D2;
     }
   </style>
 </head>
 <body>
-  <h2>Content Blocker Filters</h2>
-  <textarea id="filterInput" placeholder="Enter filter rules here...">
-||localhost:5173*$image
-||localhost:5173/affiliates/*$image
-||localhost:5173/categories/*$image
+  <div class="header">
+    <img src="icons/128.png" alt="UI Blocker Logo">
+    <div class="header-content">
+      <h1>UI Blocker</h1>
+      <p>Customize your browsing experience</p>
+    </div>
+  </div>
+  <div class="container">
+    <div class="section">
+      <h2>Opacity Settings</h2>
+      <div class="opacity-controls">
+        <div class="opacity-control">
+          <label for="imageOpacity">Image Opacity</label>
+          <input type="range" id="imageOpacity" min="0" max="100" value="30">
+          <div class="opacity-value">30%</div>
+        </div>
+        <div class="opacity-control">
+          <label for="videoOpacity">Video Opacity</label>
+          <input type="range" id="videoOpacity" min="0" max="100" value="30">
+          <div class="opacity-value">30%</div>
+        </div>
+      </div>
+    </div>
 
-localhost##a.bg-zinc-800.z-10.relative.text-2xl.font-bold.justify-center.items-center.flex.group.h-24.overflow-hidden.rounded.aspect-video > .drop-shadow
-localhost##.py-2.px-4.relative.truncate.drop-shadow
-localhost##.aspect-video > .drop-shadow
+    <div class="section">
+      <h2>Custom Selectors</h2>
+      <div class="custom-selectors">
+        <label for="customSelectors">Add custom CSS selectors (comma-separated)</label>
+        <textarea id="customSelectors" placeholder=".my-class, #my-id, div.special"></textarea>
+        <div class="help-text">Enter CSS selectors separated by commas. These elements will have their own opacity setting.</div>
+        <div class="opacity-control">
+          <label for="customOpacity">Custom Selectors Opacity</label>
+          <input type="range" id="customOpacity" min="0" max="100" value="30">
+          <div class="opacity-value">30%</div>
+        </div>
+      </div>
+    </div>
 
+    <div class="section">
+      <h2>Domain Configuration</h2>
+      <div class="domain-list" id="domainList">
+        <!-- Domain items will be added here dynamically -->
+      </div>
+      <div class="add-domain">
+        <button id="addDomainBtn">Add Domain</button>
+      </div>
+    </div>
 
-||*faptap.net/affiliates/*$image
-||*faptap.net/categories/*$image
-||*faptap.net/*$image
-||*faptap.net/*$media
+    <div class="action-buttons">
+      <button id="updateBtn" class="button primary">Update Filters</button>
+      <button id="saveBtn" class="button secondary">Save Settings</button>
+    </div>
 
-faptap.net##a.bg-zinc-800.z-10.relative.text-2xl.font-bold.justify-center.items-center.flex.group.h-24.overflow-hidden.rounded.aspect-video > .drop-shadow
-faptap.net##.py-2.px-4.relative.truncate.drop-shadow
-faptap.net##.aspect-video > .drop-shadow
-
-staging-chuck.faptap.net##a.bg-zinc-800.z-10.relative.text-2xl.font-bold.justify-center.items-center.flex.group.h-24.overflow-hidden.rounded.aspect-video > .drop-shadow
-staging-chuck.faptap.net##.py-2.px-4.relative.truncate.drop-shadow
-staging-chuck.faptap.net##.aspect-video > .drop-shadow
-
-staging-chuck.faptap.net##video:style(opacity: 0.1 )
-faptap.net##video:style(opacity: 0.1)
-
-iframe.mediadelivery.net##video:style(opacity: 0.1)
-
-*b-cdn.net/*$image
-strp.chat/*$image
-stripchat.com/*$image
-static-cdn.strpst.com/*$image
-img.doppiocdn.com/*$image
-strp.*##svg:style(opacity: 0.1)
-stripchat.*##svg:style(opacity: 0.1)
-stripchat.*##video:style(opacity: 0.1)
-
-  </textarea>
-  <button id="saveBtn">Save Filters</button>
-  <div id="status"></div>
+    <div id="status" class="status"></div>
+  </div>
   <script src="options.js"></script>
 </body>
 </html>
