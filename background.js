@@ -75,11 +75,14 @@ function handleMessage(message, sender, sendResponse) {
       theme: message.theme || 'auto'
     };
 
-    chrome.storage.local.set(settings, () => {
-      broadcastUpdate(cssRules, message.excludedDomains, message.isBlockerEnabled);
-      if (sendResponse) sendResponse({ success: true });
-    });
-    return true; // Keep message channel open for async response
+    // Broadcast immediately for real-time feedback
+    broadcastUpdate(cssRules, message.excludedDomains, message.isBlockerEnabled);
+
+    // Save to storage asynchronously
+    chrome.storage.local.set(settings);
+
+    if (sendResponse) sendResponse({ success: true, cssRules: cssRules });
+    return true;
   }
 }
 
@@ -105,7 +108,7 @@ function handleStorageLoad(result) {
   const customSelectors = result.customSelectors || '';
   const domains = result.domains || [];
   const excludedDomains = result.excludedDomains || [];
-  const applyToAllDomains = result.applyToAllDomains || false;
+  const applyToAllDomains = result.applyToAllDomains !== undefined ? result.applyToAllDomains : true;
   const isBlockerEnabled = result.isBlockerEnabled !== undefined ? result.isBlockerEnabled : true;
   const theme = result.theme || 'auto';
 

@@ -185,6 +185,95 @@
         transform: rotate(360deg);
       }
     }
+
+    .switch-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .switch-row span {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .switch.small {
+      width: 36px;
+      height: 20px;
+    }
+
+    .switch.small .slider:before {
+      height: 14px;
+      width: 14px;
+      left: 3px;
+      bottom: 3px;
+    }
+
+    .switch.small input:checked+.slider:before {
+      transform: translateX(16px);
+    }
+
+    /* Slider styling for popup */
+    .controls {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 16px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    }
+
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .control-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .control-header label {
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+
+    .opacity-value {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    input[type="range"] {
+      width: 100%;
+      height: 5px;
+      background: rgba(0, 0, 0, 0.05);
+      border-radius: 5px;
+      appearance: none;
+      cursor: pointer;
+    }
+
+    .dark-theme input[type="range"] {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      appearance: none;
+      width: 14px;
+      height: 14px;
+      background: var(--primary);
+      border-radius: 50%;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
   </style>
 </head>
 
@@ -204,6 +293,31 @@
       <div class="loading"></div>
       Syncing...
     </div>
+
+    <div class="controls">
+      <label class="switch-row">
+        <span>Global Mode</span>
+        <label class="switch small">
+          <input type="checkbox" id="globalMode">
+          <span class="slider"></span>
+        </label>
+      </label>
+      <div class="control-group">
+        <div class="control-header">
+          <label for="imageOpacity">Image Opacity</label>
+          <div class="opacity-value" id="imageOpacityValue">30%</div>
+        </div>
+        <input type="range" id="imageOpacity" min="0" max="100" value="30">
+      </div>
+      <div class="control-group">
+        <div class="control-header">
+          <label for="videoOpacity">Video Opacity</label>
+          <div class="opacity-value" id="videoOpacityValue">30%</div>
+        </div>
+        <input type="range" id="videoOpacity" min="0" max="100" value="30">
+      </div>
+    </div>
+
     <button class="button" id="optionsBtn">Advanced Settings</button>
   </div>
   <script src="popup.js"></script>

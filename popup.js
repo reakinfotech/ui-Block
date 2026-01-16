@@ -2,6 +2,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const status = document.getElementById('status');
   const optionsBtn = document.getElementById('optionsBtn');
   const powerToggle = document.getElementById('powerToggle');
+  const imageOpacitySlider = document.getElementById('imageOpacity');
+  const videoOpacitySlider = document.getElementById('videoOpacity');
+  const imageOpacityValue = document.getElementById('imageOpacityValue');
+  const videoOpacityValue = document.getElementById('videoOpacityValue');
+  const globalMode = document.getElementById('globalMode');
+
+  let debounceTimer;
+  let currentSettings = {};
 
   // Function to update status message
   function updateStatus(message, type = '') {
@@ -16,49 +24,98 @@ document.addEventListener('DOMContentLoaded', () => {
     if (theme === 'dark') document.documentElement.classList.add('dark-theme');
   }
 
+  // Listen for storage changes to sync theme across views
+  chrome.storage.onChanged.addListener((changes, area) => {
+    if (area === 'local' && changes.theme) {
+      applyTheme(changes.theme.newValue);
+    }
+  });
+
   // Load current stats
   function loadSettings() {
-    chrome.storage.local.get(['isBlockerEnabled', 'cssRules', 'theme'], (result) => {
+    chrome.storage.local.get([
+      'isBlockerEnabled', 'cssRules', 'theme',
+      'imageOpacity', 'videoOpacity', 'mediaOpacity',
+      'customOpacity', 'customSelectors', 'domains',
+      'excludedDomains', 'applyToAllDomains'
+    ], (result) => {
+      currentSettings = result;
       const isEnabled = result.isBlockerEnabled !== undefined ? result.isBlockerEnabled : true;
       powerToggle.checked = isEnabled;
 
       const theme = result.theme || 'auto';
       applyTheme(theme);
 
-      if (!isEnabled) {
-        updateStatus('Blocker is Inactive', 'inactive');
-      } else if (result.cssRules && result.cssRules.length > 0) {
-        updateStatus('Blocker is Active', 'active');
-      } else {
-        updateStatus('No active filters');
+      // Initialize sliders
+      if (result.imageOpacity !== undefined) {
+        imageOpacitySlider.value = result.imageOpacity;
+        imageOpacityValue.textContent = `${result.imageOpacity}%`;
+      }
+      if (result.videoOpacity !== undefined) {
+        videoOpacitySlider.value = result.videoOpacity;
+        videoOpacityValue.textContent = `${result.videoOpacity}%`;
+      }
+
+      // Initialize global mode
+      globalMode.checked = result.applyToAllDomains !== undefined ? result.applyToAllDomains : true;
+
+      updateStatusDisplay(isEnabled, result.cssRules);
+    });
+  }
+
+  function updateStatusDisplay(isEnabled, cssRules) {
+    if (!isEnabled) {
+      updateStatus('Blocker is Inactive', 'inactive');
+    } else if (cssRules && cssRules.length > 0) {
+      updateStatus('Blocker is Active', 'active');
+    } else {
+      updateStatus('No active filters');
+    }
+  }
+
+  // Update filters and save to storage
+  function updateFilters() {
+    const settings = {
+      action: 'updateFilters',
+      isBlockerEnabled: powerToggle.checked,
+      imageOpacity: parseInt(imageOpacitySlider.value),
+      videoOpacity: parseInt(videoOpacitySlider.value),
+      mediaOpacity: currentSettings.mediaOpacity !== undefined ? currentSettings.mediaOpacity : 30,
+      customOpacity: currentSettings.customOpacity !== undefined ? currentSettings.customOpacity : 30,
+      customSelectors: currentSettings.customSelectors || '',
+      domains: currentSettings.domains || [],
+      excludedDomains: currentSettings.excludedDomains || [],
+      applyToAllDomains: globalMode.checked,
+      theme: currentSettings.theme || 'auto'
+    };
+
+    // Update local cache immediately
+    Object.assign(currentSettings, settings);
+    delete currentSettings.action; // Don't save action to storage local if it happened to be there
+
+    chrome.runtime.sendMessage(settings, (response) => {
+      if (chrome.runtime.lastError) {
+        console.warn('Communication error:', chrome.runtime.lastError);
+      }
+      if (response && response.cssRules) {
+        updateStatusDisplay(settings.isBlockerEnabled, response.cssRules);
       }
     });
   }
 
   // Toggle blocker state
-  powerToggle.addEventListener('change', () => {
-    const isEnabled = powerToggle.checked;
+  powerToggle.addEventListener('change', updateFilters);
+  globalMode.addEventListener('change', updateFilters);
 
-    chrome.storage.local.get(['imageOpacity', 'videoOpacity', 'mediaOpacity', 'customOpacity', 'customSelectors', 'domains', 'excludedDomains', 'applyToAllDomains', 'theme'], (result) => {
-      chrome.runtime.sendMessage({
-        action: 'updateFilters',
-        isBlockerEnabled: isEnabled,
-        imageOpacity: result.imageOpacity !== undefined ? result.imageOpacity : 30,
-        videoOpacity: result.videoOpacity !== undefined ? result.videoOpacity : 30,
-        mediaOpacity: result.mediaOpacity !== undefined ? result.mediaOpacity : 30,
-        customOpacity: result.customOpacity !== undefined ? result.customOpacity : 30,
-        customSelectors: result.customSelectors || '',
-        domains: result.domains || [],
-        excludedDomains: result.excludedDomains || [],
-        applyToAllDomains: result.applyToAllDomains || false,
-        theme: result.theme || 'auto'
-      }, (response) => {
-        if (chrome.runtime.lastError) {
-          console.warn('Communication error:', chrome.runtime.lastError);
-        }
-        loadSettings();
-      });
-    });
+  // slider event listeners
+  imageOpacitySlider.addEventListener('input', () => {
+    imageOpacityValue.textContent = `${imageOpacitySlider.value}%`;
+    updateFilters();
+  });
+
+  videoOpacitySlider.addEventListener('input', () => {
+    videoOpacityValue.textContent = `${videoOpacitySlider.value}%`;
+    updateFilters();
   });
 
   optionsBtn.addEventListener('click', () => {

@@ -65,7 +65,15 @@ document.addEventListener('DOMContentLoaded', () => {
     document.documentElement.classList.remove('light-theme', 'dark-theme');
     if (theme === 'light') document.documentElement.classList.add('light-theme');
     if (theme === 'dark') document.documentElement.classList.add('dark-theme');
-    themeToggle.textContent = theme === 'dark' ? '☀️' : '🌙';
+
+    // Update icon
+    if (theme === 'dark') {
+      themeToggle.textContent = '☀️';
+    } else if (theme === 'light') {
+      themeToggle.textContent = '🌙';
+    } else {
+      themeToggle.textContent = '🌓';
+    }
   }
 
   // Toggle Theme
@@ -79,6 +87,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
       chrome.storage.local.set({ theme: nextTheme }, () => {
         applyTheme(nextTheme);
+        // Also update background script if necessary, though it primarily cares about CSS filters
+        chrome.runtime.sendMessage({ action: 'themeChanged', theme: nextTheme });
       });
     });
   });
@@ -163,10 +173,22 @@ document.addEventListener('DOMContentLoaded', () => {
   addExcludeBtn.addEventListener('click', () => addDomainItem(excludeList));
   applyToAllDomainsCheckbox.addEventListener('change', () => toggleDomainSection(applyToAllDomainsCheckbox.checked));
 
-  imageOpacitySlider.addEventListener('input', () => updateOpacity(imageOpacitySlider, opacityValues[0]));
-  videoOpacitySlider.addEventListener('input', () => updateOpacity(videoOpacitySlider, opacityValues[1]));
-  mediaOpacitySlider.addEventListener('input', () => updateOpacity(mediaOpacitySlider, opacityValues[2]));
-  customOpacitySlider.addEventListener('input', () => updateOpacity(customOpacitySlider, opacityValues[3]));
+  imageOpacitySlider.addEventListener('input', () => {
+    updateOpacity(imageOpacitySlider, opacityValues[0]);
+    updateFilters();
+  });
+  videoOpacitySlider.addEventListener('input', () => {
+    updateOpacity(videoOpacitySlider, opacityValues[1]);
+    updateFilters();
+  });
+  mediaOpacitySlider.addEventListener('input', () => {
+    updateOpacity(mediaOpacitySlider, opacityValues[2]);
+    updateFilters();
+  });
+  customOpacitySlider.addEventListener('input', () => {
+    updateOpacity(customOpacitySlider, opacityValues[3]);
+    updateFilters();
+  });
 
   saveBtn.addEventListener('click', () => saveSettings());
   updateBtn.addEventListener('click', () => {
