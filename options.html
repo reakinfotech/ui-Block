@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UI Block - Premium Customization</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+      --bg: #f8fafc;
+      /* Soft Slate */
+      --card-bg: rgba(255, 255, 255, 0.8);
+      --text: #1e293b;
+      /* Deep Slate */
+      --text-muted: #64748b;
+      --border: rgba(226, 232, 240, 0.8);
+      --success: #10b981;
+      --danger: #ef4444;
+    }
+
+    /* Forced Dark Theme Class */
+    .dark-theme {
+      --bg: #0f172a;
+      --card-bg: rgba(30, 41, 59, 0.7);
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --border: rgba(255, 255, 255, 0.1);
+    }
+
+    /* Forced Light Theme Class */
+    .light-theme {
+      --bg: #f8fafc;
+      --card-bg: rgba(255, 255, 255, 0.8);
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --border: rgba(226, 232, 240, 0.8);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not(.light-theme) {
+        --bg: #0f172a;
+        --card-bg: rgba(30, 41, 59, 0.7);
+        --text: #f1f5f9;
+        --text-muted: #94a3b8;
+        --border: rgba(255, 255, 255, 0.1);
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg);
+      background-image:
+        radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.1) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.05) 0px, transparent 50%);
+      color: var(--text);
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 900px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .glass-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 32px;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 8px;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .header img {
+      width: 64px;
+      height: 64px;
+      border-radius: 14px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 2rem;
+      font-weight: 600;
+      letter-spacing: -0.025em;
+      background: linear-gradient(to right, #818cf8, #34d399);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .header p {
+      margin: 4px 0 0;
+      color: var(--text-muted);
+      font-size: 1rem;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    /* Theme Toggle Button */
+    .theme-toggle {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    }
+
+    .theme-toggle:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Toggle Switch */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 52px;
+      height: 28px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #cbd5e1;
+      transition: .4s;
+      border-radius: 34px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 20px;
+      width: 20px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+
+    input:checked+.slider {
+      background-color: var(--primary);
+    }
+
+    input:checked+.slider:before {
+      transform: translateX(24px);
+    }
+
+    h2 {
+      font-size: 1.15rem;
+      font-weight: 500;
+      margin: 0 0 20px 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    h2::before {
+      content: '';
+      width: 4px;
+      height: 18px;
+      background: var(--primary);
+      border-radius: 10px;
+    }
+
+    .grid-controls {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 24px;
+    }
+
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    label {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+
+    input[type="range"] {
+      width: 100%;
+      height: 6px;
+      background: rgba(0, 0, 0, 0.05);
+      border-radius: 5px;
+      appearance: none;
+      cursor: pointer;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      input[type="range"] {
+        background: rgba(255, 255, 255, 0.1);
+      }
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      background: var(--primary);
+      border-radius: 50%;
+    }
+
+    .opacity-value {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    textarea {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.9rem;
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    .checkbox-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px;
+      background: rgba(0, 0, 0, 0.02);
+      border-radius: 12px;
+      cursor: pointer;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .checkbox-wrapper {
+        background: rgba(255, 255, 255, 0.03);
+      }
+    }
+
+    .domain-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .domain-item {
+      display: flex;
+      gap: 10px;
+    }
+
+    input[type="text"] {
+      flex: 1;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 8px 14px;
+      color: var(--text);
+      font-size: 0.85rem;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      font-size: 0.9rem;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+
+    .status {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      padding: 14px 24px;
+      border-radius: 12px;
+      background: var(--card-bg);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--border);
+      transform: translateY(100px);
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: 1000;
+    }
+
+    .status.show {
+      transform: translateY(0);
+    }
+
+    .help-text {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="glass-card">
+      <div class="header">
+        <div class="header-left">
+          <img src="icons/128.png" alt="Logo">
+          <div>
+            <h1>UI Blocker</h1>
+            <p>Adaptive browsing experience</p>
+          </div>
+        </div>
+        <div class="header-right">
+          <button id="themeToggle" class="theme-toggle" title="Toggle Theme">🌓</button>
+          <label class="switch">
+            <input type="checkbox" id="globalPowerToggle" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="glass-card">
+      <h2>Opacity Controls</h2>
+      <div class="grid-controls">
+        <div class="control-group">
+          <label for="imageOpacity">Image Opacity</label>
+          <input type="range" id="imageOpacity" min="0" max="100" value="30">
+          <div class="opacity-value">30%</div>
+        </div>
+        <div class="control-group">
+          <label for="videoOpacity">Video Opacity</label>
+          <input type="range" id="videoOpacity" min="0" max="100" value="30">
+          <div class="opacity-value">30%</div>
+        </div>
+        <div class="control-group">
+          <label for="mediaOpacity">Media Opacity</label>
+          <input type="range" id="mediaOpacity" min="0" max="100" value="30">
+          <div class="opacity-value">30%</div>
+        </div>
+        <div class="control-group">
+          <label for="customOpacity">Custom Selection Opacity</label>
+          <input type="range" id="customOpacity" min="0" max="100" value="30">
+          <div class="opacity-value">30%</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="glass-card">
+      <h2>Selectors & Domains</h2>
+      <div class="control-group" style="margin-bottom: 24px;">
+        <label for="customSelectors">Custom Target Elements</label>
+        <textarea id="customSelectors" placeholder=".ads, #sidebar, div.sponsored"></textarea>
+      </div>
+
+      <label class="checkbox-wrapper">
+        <input type="checkbox" id="applyToAllDomains">
+        <div>
+          <span style="display: block; font-weight: 500;">Enable Globes</span>
+          <span class="help-text">Apply blocking to every website visited.</span>
+        </div>
+      </label>
+
+      <div id="domainSection" style="margin-top: 24px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <h2>Targeted Domains</h2>
+          <button id="addDomainBtn" class="btn btn-outline" style="padding: 4px 10px; font-size: 0.8rem;">+ Add</button>
+        </div>
+        <div class="domain-list" id="domainList"></div>
+      </div>
+
+      <div style="margin-top: 24px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <h2 style="color: var(--danger);">Excluded Domains</h2>
+          <button id="addExcludeBtn" class="btn btn-outline" style="padding: 4px 10px; font-size: 0.8rem;">+
+            Add</button>
+        </div>
+        <div class="domain-list" id="excludeList"></div>
+      </div>
+    </div>
+
+    <div style="display: flex; gap: 16px;">
+      <button id="updateBtn" class="btn btn-primary">Apply Changes</button>
+      <button id="saveBtn" class="btn btn-outline">Save Settings</button>
+    </div>
+  </div>
+
+  <div id="status" class="status"></div>
+  <script src="options.js"></script>
+</body>
+
+</html>
