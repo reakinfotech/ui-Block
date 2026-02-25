@@ -1,3 +1,5 @@
+const browserAPI = typeof chrome !== 'undefined' ? chrome : browser;
+
 // Create and inject style element
 const styleElement = document.createElement('style');
 document.head.appendChild(styleElement);
@@ -24,14 +26,14 @@ function updateStyles(cssRules, excludedDomains = [], isBlockerEnabled = true) {
 }
 
 // Listen for messages from background script
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+browserAPI.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === 'updateStyles') {
     updateStyles(message.cssRules, message.excludedDomains, message.isBlockerEnabled);
   }
 });
 
 // Load initial styles
-chrome.storage.local.get(['cssRules', 'excludedDomains', 'isBlockerEnabled'], (result) => {
+browserAPI.storage.local.get(['cssRules', 'excludedDomains', 'isBlockerEnabled'], (result) => {
   if (result.cssRules) {
     updateStyles(result.cssRules, result.excludedDomains || [], result.isBlockerEnabled !== undefined ? result.isBlockerEnabled : true);
   }

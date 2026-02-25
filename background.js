@@ -1,3 +1,5 @@
+const browserAPI = typeof chrome !== 'undefined' ? chrome : browser;
+
 let currentRules = [];
 
 function parseFilters(imageOpacity, videoOpacity, mediaOpacity, customOpacity, customSelectors, domains, excludedDomains = [], applyToAll = false, isBlockerEnabled = true) {
@@ -79,7 +81,7 @@ function handleMessage(message, sender, sendResponse) {
     broadcastUpdate(cssRules, message.excludedDomains, message.isBlockerEnabled);
 
     // Save to storage asynchronously
-    chrome.storage.local.set(settings);
+    browserAPI.storage.local.set(settings);
 
     if (sendResponse) sendResponse({ success: true, cssRules: cssRules });
     return true;
@@ -87,9 +89,9 @@ function handleMessage(message, sender, sendResponse) {
 }
 
 function broadcastUpdate(cssRules, excludedDomains, isBlockerEnabled = true) {
-  chrome.tabs.query({}, (tabs) => {
+  browserAPI.tabs.query({}, (tabs) => {
     tabs.forEach(tab => {
-      chrome.tabs.sendMessage(tab.id, {
+      browserAPI.tabs.sendMessage(tab.id, {
         action: 'updateStyles',
         cssRules: cssRules,
         excludedDomains: excludedDomains,
@@ -128,7 +130,7 @@ function handleStorageLoad(result) {
   const needsInit = result.imageOpacity === undefined || result.isBlockerEnabled === undefined;
 
   if (needsInit) {
-    chrome.storage.local.set({
+    browserAPI.storage.local.set({
       cssRules: cssRules,
       imageOpacity,
       videoOpacity,
@@ -146,6 +148,6 @@ function handleStorageLoad(result) {
   broadcastUpdate(cssRules, excludedDomains, isBlockerEnabled);
 }
 
-chrome.runtime.onMessage.addListener(handleMessage);
+browserAPI.runtime.onMessage.addListener(handleMessage);
 
-chrome.storage.local.get(['imageOpacity', 'videoOpacity', 'mediaOpacity', 'customOpacity', 'customSelectors', 'domains', 'excludedDomains', 'applyToAllDomains', 'isBlockerEnabled', 'theme'], handleStorageLoad);
+browserAPI.storage.local.get(['imageOpacity', 'videoOpacity', 'mediaOpacity', 'customOpacity', 'customSelectors', 'domains', 'excludedDomains', 'applyToAllDomains', 'isBlockerEnabled', 'theme'], handleStorageLoad);

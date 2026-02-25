@@ -1,3 +1,5 @@
+const browserAPI = typeof chrome !== 'undefined' ? chrome : browser;
+
 document.addEventListener('DOMContentLoaded', () => {
   const imageOpacitySlider = document.getElementById('imageOpacity');
   const videoOpacitySlider = document.getElementById('videoOpacity');
@@ -19,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Load saved settings
   function loadSettings() {
-    chrome.storage.local.get(['imageOpacity', 'videoOpacity', 'mediaOpacity', 'customOpacity', 'customSelectors', 'domains', 'excludedDomains', 'applyToAllDomains', 'isBlockerEnabled', 'theme'], (result) => {
+    browserAPI.storage.local.get(['imageOpacity', 'videoOpacity', 'mediaOpacity', 'customOpacity', 'customSelectors', 'domains', 'excludedDomains', 'applyToAllDomains', 'isBlockerEnabled', 'theme'], (result) => {
       if (result.imageOpacity !== undefined) {
         imageOpacitySlider.value = result.imageOpacity;
         opacityValues[0].textContent = `${result.imageOpacity}%`;
@@ -78,17 +80,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Toggle Theme
   themeToggle.addEventListener('click', () => {
-    chrome.storage.local.get(['theme'], (result) => {
+    browserAPI.storage.local.get(['theme'], (result) => {
       const currentTheme = result.theme || 'auto';
       let nextTheme = 'dark';
 
       if (currentTheme === 'dark') nextTheme = 'light';
       else if (currentTheme === 'light') nextTheme = 'auto';
 
-      chrome.storage.local.set({ theme: nextTheme }, () => {
+      browserAPI.storage.local.set({ theme: nextTheme }, () => {
         applyTheme(nextTheme);
         // Also update background script if necessary, though it primarily cares about CSS filters
-        chrome.runtime.sendMessage({ action: 'themeChanged', theme: nextTheme });
+        browserAPI.runtime.sendMessage({ action: 'themeChanged', theme: nextTheme });
       });
     });
   });
@@ -118,15 +120,15 @@ document.addEventListener('DOMContentLoaded', () => {
       isBlockerEnabled: globalPowerToggle.checked
     };
 
-    chrome.storage.local.set(settings, () => {
+    browserAPI.storage.local.set(settings, () => {
       if (!silent) showStatus('Profile Saved', 'success');
     });
   }
 
   // Update filters
   function updateFilters() {
-    chrome.storage.local.get(['theme'], (themeResult) => {
-      chrome.runtime.sendMessage({
+    browserAPI.storage.local.get(['theme'], (themeResult) => {
+      browserAPI.runtime.sendMessage({
         action: 'updateFilters',
         imageOpacity: parseInt(imageOpacitySlider.value),
         videoOpacity: parseInt(videoOpacitySlider.value),
@@ -139,8 +141,8 @@ document.addEventListener('DOMContentLoaded', () => {
         isBlockerEnabled: globalPowerToggle.checked,
         theme: themeResult.theme || 'auto'
       }, (response) => {
-        if (chrome.runtime.lastError) {
-          console.warn('Communication error:', chrome.runtime.lastError);
+        if (browserAPI.runtime.lastError) {
+          console.warn('Communication error:', browserAPI.runtime.lastError);
         }
         showStatus('Filters Updated', 'success');
       });

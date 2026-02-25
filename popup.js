@@ -1,3 +1,5 @@
+const browserAPI = typeof chrome !== 'undefined' ? chrome : browser;
+
 document.addEventListener('DOMContentLoaded', () => {
   const status = document.getElementById('status');
   const optionsBtn = document.getElementById('optionsBtn');
@@ -25,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Listen for storage changes to sync theme across views
-  chrome.storage.onChanged.addListener((changes, area) => {
+  browserAPI.storage.onChanged.addListener((changes, area) => {
     if (area === 'local' && changes.theme) {
       applyTheme(changes.theme.newValue);
     }
@@ -33,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Load current stats
   function loadSettings() {
-    chrome.storage.local.get([
+    browserAPI.storage.local.get([
       'isBlockerEnabled', 'cssRules', 'theme',
       'imageOpacity', 'videoOpacity', 'mediaOpacity',
       'customOpacity', 'customSelectors', 'domains',
@@ -93,9 +95,9 @@ document.addEventListener('DOMContentLoaded', () => {
     Object.assign(currentSettings, settings);
     delete currentSettings.action; // Don't save action to storage local if it happened to be there
 
-    chrome.runtime.sendMessage(settings, (response) => {
-      if (chrome.runtime.lastError) {
-        console.warn('Communication error:', chrome.runtime.lastError);
+    browserAPI.runtime.sendMessage(settings, (response) => {
+      if (browserAPI.runtime.lastError) {
+        console.warn('Communication error:', browserAPI.runtime.lastError);
       }
       if (response && response.cssRules) {
         updateStatusDisplay(settings.isBlockerEnabled, response.cssRules);
@@ -119,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   optionsBtn.addEventListener('click', () => {
-    chrome.runtime.openOptionsPage();
+    browserAPI.runtime.openOptionsPage();
   });
 
   loadSettings();
