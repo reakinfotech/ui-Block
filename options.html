@@ -4,157 +4,182 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>UI Block - Premium Customization</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <title>UI Blocker Pro — Settings</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
+    /* ── Professional Blue Design Tokens ── */
     :root {
-      --primary: #6366f1;
-      --primary-hover: #4f46e5;
+      --primary: #2563eb;
+      --primary-h: #1d4ed8;
       --bg: #f8fafc;
-      /* Soft Slate */
-      --card-bg: rgba(255, 255, 255, 0.8);
-      --text: #1e293b;
-      /* Deep Slate */
-      --text-muted: #64748b;
-      --border: rgba(226, 232, 240, 0.8);
-      --success: #10b981;
+      --surface: #ffffff;
+      --border: #e2e8f0;
+      --text: #0f172a;
+      --muted: #64748b;
       --danger: #ef4444;
-    }
-
-    /* Forced Dark Theme Class */
-    .dark-theme {
-      --bg: #0f172a;
-      --card-bg: rgba(30, 41, 59, 0.7);
-      --text: #f1f5f9;
-      --text-muted: #94a3b8;
-      --border: rgba(255, 255, 255, 0.1);
-    }
-
-    /* Forced Light Theme Class */
-    .light-theme {
-      --bg: #f8fafc;
-      --card-bg: rgba(255, 255, 255, 0.8);
-      --text: #1e293b;
-      --text-muted: #64748b;
-      --border: rgba(226, 232, 240, 0.8);
+      --success: #10b981;
+      --radius: 16px;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     @media (prefers-color-scheme: dark) {
       :root:not(.light-theme) {
+        --primary: #3b82f6;
+        --primary-h: #60a5fa;
         --bg: #0f172a;
-        --card-bg: rgba(30, 41, 59, 0.7);
-        --text: #f1f5f9;
-        --text-muted: #94a3b8;
-        --border: rgba(255, 255, 255, 0.1);
+        --surface: #1e293b;
+        --border: #334155;
+        --text: #f8fafc;
+        --muted: #94a3b8;
       }
+    }
+
+    .dark-theme {
+      --primary: #3b82f6;
+      --primary-h: #60a5fa;
+      --bg: #0f172a;
+      --surface: #1e293b;
+      --border: #334155;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+    }
+
+    .light-theme {
+      --primary: #2563eb;
+      --primary-h: #1d4ed8;
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --border: #e2e8f0;
+      --text: #0f172a;
+      --muted: #64748b;
     }
 
     * {
       box-sizing: border-box;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      margin: 0;
+      padding: 0;
     }
 
     body {
-      font-family: 'Inter', sans-serif;
-      background-color: var(--bg);
-      background-image:
-        radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.1) 0px, transparent 50%),
-        radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.05) 0px, transparent 50%);
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
       color: var(--text);
-      margin: 0;
       min-height: 100vh;
       display: flex;
       justify-content: center;
-      padding: 40px 20px;
+      padding: 40px 16px 100px;
+      font-size: 14px;
+      line-height: 1.6;
+      overflow-x: hidden;
     }
 
     .container {
       width: 100%;
-      max-width: 900px;
+      max-width: 960px;
       display: flex;
       flex-direction: column;
       gap: 24px;
+      animation: fadeIn 0.5s ease-out;
     }
 
-    .glass-card {
-      background: var(--card-bg);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ── Card UI ── */
+    .card {
+      background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 20px;
+      border-radius: var(--radius);
       padding: 32px;
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+      transition: var(--transition);
     }
 
+    .card:hover {
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      border-color: color-mix(in srgb, var(--primary) 20%, var(--border));
+    }
+
+    /* ── Header ── */
     .header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 24px;
-      margin-bottom: 8px;
+      gap: 20px;
+      flex-wrap: wrap;
     }
 
-    .header-left {
+    .header-brand {
       display: flex;
       align-items: center;
       gap: 20px;
     }
 
-    .header img {
-      width: 64px;
-      height: 64px;
-      border-radius: 14px;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    .header-brand img {
+      width: 56px;
+      height: 56px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+      transition: transform 0.3s;
     }
 
-    .header h1 {
-      margin: 0;
-      font-size: 2rem;
-      font-weight: 600;
+    .header-brand img:hover {
+      transform: scale(1.05) rotate(2deg);
+    }
+
+    .header-brand h1 {
+      font-size: 24px;
+      font-weight: 800;
       letter-spacing: -0.025em;
-      background: linear-gradient(to right, #818cf8, #34d399);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
     }
 
-    .header p {
-      margin: 4px 0 0;
-      color: var(--text-muted);
-      font-size: 1rem;
+    .header-brand p {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 2px;
     }
 
-    .header-right {
+    .header-actions {
       display: flex;
       align-items: center;
       gap: 16px;
     }
 
-    /* Theme Toggle Button */
-    .theme-toggle {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      color: var(--text);
+    /* ── Icon Button ── */
+    .icon-btn {
       width: 44px;
       height: 44px;
-      border-radius: 12px;
-      cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.25rem;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+      font-size: 18px;
+      transition: var(--transition);
     }
 
-    .theme-toggle:hover {
+    .icon-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      background: color-mix(in srgb, var(--primary) 5%, var(--surface));
       transform: translateY(-2px);
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
     }
 
-    /* Toggle Switch */
+    /* ── Switch ── */
     .switch {
       position: relative;
-      display: inline-block;
       width: 52px;
       height: 28px;
     }
@@ -165,285 +190,567 @@
       height: 0;
     }
 
-    .slider {
+    .slider-toggle {
       position: absolute;
+      inset: 0;
+      background: var(--border);
+      border-radius: 99px;
       cursor: pointer;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: #cbd5e1;
-      transition: .4s;
-      border-radius: 34px;
+      transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    .slider:before {
+    .slider-toggle::before {
+      content: '';
       position: absolute;
-      content: "";
-      height: 20px;
       width: 20px;
+      height: 20px;
       left: 4px;
-      bottom: 4px;
-      background-color: white;
-      transition: .4s;
+      top: 4px;
+      background: #fff;
       border-radius: 50%;
+      transition: 0.3s;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     }
 
-    input:checked+.slider {
-      background-color: var(--primary);
+    input:checked+.slider-toggle {
+      background: var(--primary);
     }
 
-    input:checked+.slider:before {
+    input:checked+.slider-toggle::before {
       transform: translateX(24px);
     }
 
-    h2 {
-      font-size: 1.15rem;
-      font-weight: 500;
-      margin: 0 0 20px 0;
+    /* ── Section Title ── */
+    .section-title {
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      margin-bottom: 24px;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
     }
 
-    h2::before {
+    .section-title::after {
       content: '';
-      width: 4px;
-      height: 18px;
-      background: var(--primary);
-      border-radius: 10px;
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, color-mix(in srgb, var(--primary) 20%, transparent), transparent);
     }
 
-    .grid-controls {
+    /* ── Grid Layout ── */
+    .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 24px;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 32px;
     }
 
-    .control-group {
+    /* ── Control / Stepper ── */
+    .control {
       display: flex;
       flex-direction: column;
       gap: 12px;
     }
 
-    label {
-      font-size: 0.85rem;
-      font-weight: 500;
-      color: var(--text-muted);
+    .control-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .control-head label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .control-head label svg {
+      width: 18px;
+      height: 18px;
+      color: var(--primary);
+      stroke-width: 2.2;
+      opacity: 0.9;
+    }
+
+    .val {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--primary);
+      font-variant-numeric: tabular-nums;
+      background: color-mix(in srgb, var(--primary) 10%, var(--surface));
+      padding: 2px 8px;
+      border-radius: 6px;
+    }
+
+    .stepper {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .step-btn {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .step-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      background: color-mix(in srgb, var(--primary) 5%, var(--surface));
+      transform: translateY(-1px);
+    }
+
+    .step-btn:active {
+      transform: translateY(0);
+    }
+
+    .step-btn svg {
+      width: 18px;
+      height: 18px;
+      stroke-width: 2.5;
     }
 
     input[type="range"] {
-      width: 100%;
-      height: 6px;
-      background: rgba(0, 0, 0, 0.05);
-      border-radius: 5px;
+      flex: 1;
+      height: 8px;
+      border-radius: 8px;
       appearance: none;
+      background: var(--border);
+      outline: none;
       cursor: pointer;
-    }
-
-    @media (prefers-color-scheme: dark) {
-      input[type="range"] {
-        background: rgba(255, 255, 255, 0.1);
-      }
     }
 
     input[type="range"]::-webkit-slider-thumb {
       appearance: none;
-      width: 16px;
-      height: 16px;
-      background: var(--primary);
+      width: 20px;
+      height: 20px;
       border-radius: 50%;
+      background: var(--primary);
+      border: 4px solid var(--surface);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      transition: transform 0.2s;
     }
 
-    .opacity-value {
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: var(--primary);
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
     }
 
+    /* ── Interactive Elements ── */
     textarea {
       width: 100%;
-      background: var(--bg);
+      min-height: 120px;
+      padding: 16px;
+      border-radius: 14px;
       border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 14px;
+      background: color-mix(in srgb, var(--primary) 2%, var(--surface));
       color: var(--text);
       font-family: inherit;
-      font-size: 0.9rem;
-      min-height: 80px;
+      font-size: 14px;
       resize: vertical;
+      margin-top: 10px;
+      transition: var(--transition);
+      outline: none;
     }
 
-    .checkbox-wrapper {
+    textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary) 10%, transparent);
+      background: var(--surface);
+    }
+
+    .check-card {
       display: flex;
       align-items: center;
-      gap: 12px;
-      padding: 14px;
-      background: rgba(0, 0, 0, 0.02);
-      border-radius: 12px;
+      gap: 16px;
+      padding: 24px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: var(--surface);
+      cursor: pointer;
+      margin-top: 24px;
+      transition: var(--transition);
+    }
+
+    .check-card:hover {
+      border-color: var(--primary);
+      background: color-mix(in srgb, var(--primary) 2%, var(--surface));
+      transform: scale(1.01);
+    }
+
+    .check-card input {
+      width: 22px;
+      height: 22px;
+      accent-color: var(--primary);
       cursor: pointer;
     }
 
-    @media (prefers-color-scheme: dark) {
-      .checkbox-wrapper {
-        background: rgba(255, 255, 255, 0.03);
-      }
+    .check-card-text b {
+      display: block;
+      font-size: 16px;
+      color: var(--text);
+    }
+
+    .check-card-text span {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    /* ── Domain Lists ── */
+    .domain-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 32px;
+    }
+
+    .domain-head h3 {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
     }
 
     .domain-list {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 12px;
+      margin-top: 16px;
+      width: 100%;
     }
 
     .domain-item {
       display: flex;
-      gap: 10px;
+      gap: 12px;
+      align-items: center;
+      width: 100%;
     }
 
     input[type="text"] {
       flex: 1;
-      background: var(--bg);
-      border: 1px solid var(--border);
+      padding: 12px 16px;
       border-radius: 10px;
-      padding: 8px 14px;
+      border: 1px solid var(--border);
+      background: var(--bg);
       color: var(--text);
-      font-size: 0.85rem;
+      font-family: inherit;
+      font-size: 14px;
+      outline: none;
+      transition: var(--transition);
     }
 
+    input[type="text"]:focus {
+      border-color: var(--primary);
+      background: var(--surface);
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary) 8%, transparent);
+    }
+
+    /* ── Buttons ── */
     .btn {
-      padding: 10px 20px;
-      border-radius: 10px;
-      font-weight: 500;
+      padding: 12px 28px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      font-family: inherit;
+      font-weight: 700;
       cursor: pointer;
-      border: none;
-      font-size: 0.9rem;
+      transition: var(--transition);
+      font-size: 15px;
+      letter-spacing: 0.01em;
     }
 
     .btn-primary {
       background: var(--primary);
-      color: white;
+      color: #fff;
+      border: none;
+      box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
     }
 
-    .btn-outline {
+    .btn-primary:hover {
+      background: var(--primary-h);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3);
+    }
+
+    .btn-ghost {
       background: transparent;
-      border: 1px solid var(--border);
       color: var(--text);
     }
 
-    .status {
-      position: fixed;
+    .btn-ghost:hover {
+      background: var(--surface);
+      color: var(--primary);
+      border-color: var(--primary);
+      transform: translateY(-2px);
+    }
+
+    .btn-sm {
+      padding: 8px 16px;
+      font-size: 13px;
+      border-radius: 8px;
+    }
+
+    /* ── Footer Actions ── */
+    .action-bar {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      justify-content: flex-end;
+      margin-top: 12px;
+      position: sticky;
       bottom: 24px;
-      right: 24px;
-      padding: 14px 24px;
-      border-radius: 12px;
-      background: var(--card-bg);
-      backdrop-filter: blur(8px);
-      border: 1px solid var(--border);
-      transform: translateY(100px);
-      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      padding-top: 16px;
+    }
+
+    @media (max-width: 640px) {
+      .header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+
+      .header-actions {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .action-bar {
+        flex-direction: column-reverse;
+        width: 100%;
+      }
+
+      .btn {
+        width: 100%;
+      }
+    }
+
+    /* ── Status Toast ── */
+    #status {
+      position: fixed;
+      bottom: 40px;
+      right: 40px;
+      padding: 16px 32px;
+      border-radius: 14px;
+      background: var(--primary);
+      color: #fff;
+      font-weight: 700;
+      box-shadow: 0 20px 25px -5px rgba(37, 99, 235, 0.4);
+      transform: translateY(150px);
+      transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       z-index: 1000;
     }
 
-    .status.show {
+    #status.show {
       transform: translateY(0);
     }
 
+    /* Tooltip styles */
     .help-text {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      margin-top: 4px;
+      font-size: 12.5px;
+      color: var(--muted);
+      margin-top: -8px;
+      margin-bottom: 8px;
     }
   </style>
 </head>
 
 <body>
   <div class="container">
-    <div class="glass-card">
-      <div class="header">
-        <div class="header-left">
-          <img src="icons/128.png" alt="Logo">
-          <div>
-            <h1>UI Blocker</h1>
-            <p>Adaptive browsing experience</p>
+    <!-- Header Block -->
+    <div class="card header">
+      <div class="header-brand">
+        <img src="icons/128.png" alt="Pro Logo">
+        <div>
+          <h1>UI Blocker Pro</h1>
+          <p>Personalize your web experience by blocking distractions</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <!-- One-click Toggle -->
+        <button id="themeToggle" class="icon-btn" title="Switch between Light and Dark mode">🌓</button>
+        <label class="switch" title="Enable or Disable Blocker">
+          <input type="checkbox" id="globalPowerToggle" checked>
+          <span class="slider-toggle"></span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Configuration Block -->
+    <div class="card">
+      <span class="section-title">Visual Blockers / Opacity</span>
+      <p class="help-text">Adjust how much of each element type remains visible. 0% is completely hidden.</p>
+
+      <div class="grid">
+        <!-- Images -->
+        <div class="control">
+          <div class="control-head">
+            <label>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                <circle cx="8.5" cy="8.5" r="1.5" />
+                <polyline points="21 15 16 10 5 21" />
+              </svg>
+              Photo Blocks
+            </label>
+            <span class="val opacity-value">30%</span>
+          </div>
+          <div class="stepper">
+            <button class="step-btn" data-input="imageOpacity" data-step="-1" title="Subtract 1%">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M15 18l-6-6 6-6" />
+              </svg>
+            </button>
+            <input type="range" id="imageOpacity" min="0" max="100" value="30">
+            <button class="step-btn" data-input="imageOpacity" data-step="1" title="Add 1%">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M9 18l6-6-6-6" />
+              </svg>
+            </button>
           </div>
         </div>
-        <div class="header-right">
-          <button id="themeToggle" class="theme-toggle" title="Toggle Theme">🌓</button>
-          <label class="switch">
-            <input type="checkbox" id="globalPowerToggle" checked>
-            <span class="slider"></span>
-          </label>
+        <!-- Videos -->
+        <div class="control">
+          <div class="control-head">
+            <label>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <polygon points="23 7 16 12 23 17 23 7" />
+                <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
+              </svg>
+              Video Blocks
+            </label>
+            <span class="val opacity-value">30%</span>
+          </div>
+          <div class="stepper">
+            <button class="step-btn" data-input="videoOpacity" data-step="-1" title="Subtract 1%">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M15 18l-6-6 6-6" />
+              </svg>
+            </button>
+            <input type="range" id="videoOpacity" min="0" max="100" value="30">
+            <button class="step-btn" data-input="videoOpacity" data-step="1" title="Add 1%">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M9 18l6-6-6-6" />
+              </svg>
+            </button>
+          </div>
+        </div>
+        <!-- Other Media (Layers) -->
+        <div class="control">
+          <div class="control-head">
+            <label>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M2 17L12 22L22 17" />
+                <path d="M2 12L12 17L22 12" />
+                <path d="M12 2L2 7L12 12L22 7L12 2Z" />
+              </svg>
+              Complex UI Elements
+            </label>
+            <span class="val opacity-value">30%</span>
+          </div>
+          <div class="stepper">
+            <button class="step-btn" data-input="mediaOpacity" data-step="-1" title="Subtract 1%">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M15 18l-6-6 6-6" />
+              </svg>
+            </button>
+            <input type="range" id="mediaOpacity" min="0" max="100" value="30">
+            <button class="step-btn" data-input="mediaOpacity" data-step="1" title="Add 1%">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M9 18l6-6-6-6" />
+              </svg>
+            </button>
+          </div>
+        </div>
+        <!-- Custom -->
+        <div class="control">
+          <div class="control-head">
+            <label>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <polyline points="16 18 22 12 16 6" />
+                <polyline points="8 6 2 12 8 18" />
+              </svg>
+              Personalize Your Blocks
+            </label>
+            <span class="val opacity-value">30%</span>
+          </div>
+          <div class="stepper">
+            <button class="step-btn" data-input="customOpacity" data-step="-1" title="Subtract 1%">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M15 18l-6-6 6-6" />
+              </svg>
+            </button>
+            <input type="range" id="customOpacity" min="0" max="100" value="30">
+            <button class="step-btn" data-input="customOpacity" data-step="1" title="Add 1%">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M9 18l6-6-6-6" />
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="glass-card">
-      <h2>Opacity Controls</h2>
-      <div class="grid-controls">
-        <div class="control-group">
-          <label for="imageOpacity">Image Opacity</label>
-          <input type="range" id="imageOpacity" min="0" max="100" value="30">
-          <div class="opacity-value">30%</div>
-        </div>
-        <div class="control-group">
-          <label for="videoOpacity">Video Opacity</label>
-          <input type="range" id="videoOpacity" min="0" max="100" value="30">
-          <div class="opacity-value">30%</div>
-        </div>
-        <div class="control-group">
-          <label for="mediaOpacity">Media Opacity</label>
-          <input type="range" id="mediaOpacity" min="0" max="100" value="30">
-          <div class="opacity-value">30%</div>
-        </div>
-        <div class="control-group">
-          <label for="customOpacity">Custom Selection Opacity</label>
-          <input type="range" id="customOpacity" min="0" max="100" value="30">
-          <div class="opacity-value">30%</div>
-        </div>
-      </div>
-    </div>
+    <!-- Advanced Rules Block -->
+    <div class="card">
+      <span class="section-title">Personalized Blocking Rules</span>
 
-    <div class="glass-card">
-      <h2>Selectors & Domains</h2>
-      <div class="control-group" style="margin-bottom: 24px;">
-        <label for="customSelectors">Custom Target Elements</label>
-        <textarea id="customSelectors" placeholder=".ads, #sidebar, div.sponsored"></textarea>
+      <div style="margin-top: 10px;">
+        <label style="font-size: 14px; font-weight: 600; color: var(--text);">Add Specific Elements to Block</label>
+        <p class="help-text">Enter CSS selectors like <code>.ad-banner</code> or <code>#sidebar</code> to filter them
+          out.</p>
+        <textarea id="customSelectors" placeholder="Example: .sponsored-post, [data-testid='sidebar']"></textarea>
       </div>
 
-      <label class="checkbox-wrapper">
+      <label class="check-card">
         <input type="checkbox" id="applyToAllDomains">
-        <div>
-          <span style="display: block; font-weight: 500;">Enable Globes</span>
-          <span class="help-text">Apply blocking to every website visited.</span>
+        <div class="check-card-text">
+          <b>Apply Everywhere</b>
+          <span>Protect your focus across all websites automatically.</span>
         </div>
       </label>
 
-      <div id="domainSection" style="margin-top: 24px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-          <h2>Targeted Domains</h2>
-          <button id="addDomainBtn" class="btn btn-outline" style="padding: 4px 10px; font-size: 0.8rem;">+ Add</button>
+      <!-- Whitelist Section -->
+      <div id="domainSection">
+        <div class="domain-head">
+          <h3>Safe Websites (Whitelist)</h3>
+          <button id="addDomainBtn" class="btn btn-ghost btn-sm">+ Add Website</button>
         </div>
+        <p class="help-text">Filters will only apply to these websites unless "Apply Everywhere" is on.</p>
         <div class="domain-list" id="domainList"></div>
       </div>
 
-      <div style="margin-top: 24px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-          <h2 style="color: var(--danger);">Excluded Domains</h2>
-          <button id="addExcludeBtn" class="btn btn-outline" style="padding: 4px 10px; font-size: 0.8rem;">+
-            Add</button>
-        </div>
-        <div class="domain-list" id="excludeList"></div>
+      <!-- Blacklist Section -->
+      <div class="domain-head">
+        <h3 style="color:var(--danger)">Exempted Websites (Blacklist)</h3>
+        <button id="addExcludeBtn" class="btn btn-ghost btn-sm">+ Add Website</button>
       </div>
+      <p class="help-text">The blocker will never run on these specific websites.</p>
+      <div class="domain-list" id="excludeList"></div>
     </div>
 
-    <div style="display: flex; gap: 16px;">
-      <button id="updateBtn" class="btn btn-primary">Apply Changes</button>
-      <button id="saveBtn" class="btn btn-outline">Save Settings</button>
+    <!-- Fixed Footer Action Bar -->
+    <div class="action-bar">
+      <button id="saveBtn" class="btn btn-ghost">Save Draft</button>
+      <button id="updateBtn" class="btn btn-primary">Save & Apply Changes</button>
     </div>
   </div>
 
-  <div id="status" class="status"></div>
+  <div id="status">Settings Successfully Applied</div>
   <script src="options.js"></script>
 </body>
 

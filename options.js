@@ -19,6 +19,22 @@ document.addEventListener('DOMContentLoaded', () => {
   const domainSection = document.getElementById('domainSection');
   const themeToggle = document.getElementById('themeToggle');
 
+  // Stepper logic
+  document.querySelectorAll('.step-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const inputId = btn.dataset.input;
+      const step = parseInt(btn.dataset.step);
+      const input = document.getElementById(inputId);
+      const newVal = Math.min(100, Math.max(0, parseInt(input.value) + step));
+      input.value = newVal;
+
+      // Update label and trigger filter update
+      const label = input.closest('.control').querySelector('.val');
+      if (label) label.textContent = `${newVal}%`;
+      updateFilters();
+    });
+  });
+
   // Load saved settings
   function loadSettings() {
     browserAPI.storage.local.get(['imageOpacity', 'videoOpacity', 'mediaOpacity', 'customOpacity', 'customSelectors', 'domains', 'excludedDomains', 'applyToAllDomains', 'isBlockerEnabled', 'theme'], (result) => {
@@ -80,19 +96,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Toggle Theme
   themeToggle.addEventListener('click', () => {
-    browserAPI.storage.local.get(['theme'], (result) => {
-      const currentTheme = result.theme || 'auto';
-      let nextTheme = 'dark';
+    // 2-state toggle between light and dark
+    const currentTheme = document.documentElement.classList.contains('dark-theme') ? 'dark' :
+      document.documentElement.classList.contains('light-theme') ? 'light' :
+        (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
 
-      if (currentTheme === 'dark') nextTheme = 'light';
-      else if (currentTheme === 'light') nextTheme = 'auto';
+    const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
 
-      browserAPI.storage.local.set({ theme: nextTheme }, () => {
-        applyTheme(nextTheme);
-        // Also update background script if necessary, though it primarily cares about CSS filters
-        browserAPI.runtime.sendMessage({ action: 'themeChanged', theme: nextTheme });
-      });
-    });
+    // Apply and Save
+    applyTheme(nextTheme);
+    browserAPI.storage.local.set({ theme: nextTheme });
+    showStatus(`Switched to ${nextTheme} mode`);
   });
 
   // Toggle domain section visibility

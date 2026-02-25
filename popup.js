@@ -13,9 +13,26 @@ document.addEventListener('DOMContentLoaded', () => {
   let debounceTimer;
   let currentSettings = {};
 
+  // Stepper logic
+  document.querySelectorAll('.step-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const inputId = btn.dataset.input;
+      const step = parseInt(btn.dataset.step);
+      const input = document.getElementById(inputId);
+      const newVal = Math.min(100, Math.max(0, parseInt(input.value) + step));
+      input.value = newVal;
+
+      // Update label and trigger filter update
+      const label = document.getElementById(`${inputId}Value`);
+      if (label) label.textContent = `${newVal}%`;
+      updateFilters();
+    });
+  });
+
   // Function to update status message
   function updateStatus(message, type = '') {
-    status.innerHTML = message;
+    const statusText = document.getElementById('statusText');
+    if (statusText) statusText.textContent = message;
     status.className = `status ${type}`;
   }
 

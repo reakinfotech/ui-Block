@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "UI Blocker Pro",
-  "version": "1.1",
-  "description": "Premium UI customization and content filtering with advanced domain control",
+  "version": "1.2",
+  "description": "Adaptive content filtering with advanced opacity controls and domain management.",
   "icons": {
     "16": "icons/16.png",
     "48": "icons/48.png",
@@ -10,7 +10,6 @@
   },
   "permissions": [
     "storage",
-    "declarativeNetRequest",
     "scripting",
     "tabs"
   ],
@@ -18,13 +17,16 @@
     "<all_urls>"
   ],
   "background": {
-    "service_worker": "background.js",
-    "scripts": ["background.js"]
+    "service_worker": "background.js"
   },
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
-      "js": ["content.js"]
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content.js"
+      ]
     }
   ],
   "options_page": "options.html",
