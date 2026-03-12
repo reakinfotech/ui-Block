@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "UI Blocker",
-  "version": "1.0",
-  "description": "Block and customize UI elements with opacity control",
+  "name": "UI Blocker Pro",
+  "version": "1.2",
+  "description": "Adaptive content filtering with advanced opacity controls and domain management.",
   "icons": {
     "16": "icons/16.png",
     "48": "icons/48.png",
@@ -10,7 +10,6 @@
   },
   "permissions": [
     "storage",
-    "declarativeNetRequest",
     "scripting",
     "tabs"
   ],
@@ -22,8 +21,12 @@
   },
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
-      "js": ["content.js"]
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content.js"
+      ]
     }
   ],
   "options_page": "options.html",
@@ -33,6 +36,11 @@
       "16": "icons/16.png",
       "48": "icons/48.png",
       "128": "icons/128.png"
+    }
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "ui-blocker@your-personal-domain.com"
     }
   }
 }

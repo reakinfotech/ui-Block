@@ -1,81 +1,425 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-  <title>UI Block</title>
+  <meta charset="UTF-8">
+  <title>UI Blocker Pro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
-    body {
-      width: 300px;
-      padding: 15px;
-      font-family: Arial, sans-serif;
+    /* ── Professional Blue Design Tokens ── */
+    :root {
+      --primary: #2563eb;
+      --primary-h: #1d4ed8;
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --border: #e2e8f0;
+      --text: #0f172a;
+      --muted: #64748b;
+      --active: #10b981;
+      --inactive: #ef4444;
+      --radius: 12px;
     }
-    .container {
+
+    @media (prefers-color-scheme: dark) {
+      :root:not(.light-theme) {
+        --primary: #3b82f6;
+        --primary-h: #60a5fa;
+        --bg: #0f172a;
+        --surface: #1e293b;
+        --border: #334155;
+        --text: #f8fafc;
+        --muted: #94a3b8;
+      }
+    }
+
+    .dark-theme {
+      --primary: #3b82f6;
+      --primary-h: #60a5fa;
+      --bg: #0f172a;
+      --surface: #1e293b;
+      --border: #334155;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+    }
+
+    .light-theme {
+      --primary: #2563eb;
+      --primary-h: #1d4ed8;
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --border: #e2e8f0;
+      --text: #0f172a;
+      --muted: #64748b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      width: 320px;
+      padding: 16px;
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .stack {
       display: flex;
       flex-direction: column;
+      gap: 14px;
+    }
+
+    /* ── Header ── */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .header-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header-brand img {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .header-brand h1 {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -0.01em;
+    }
+
+    /* ── Toggle switch ── */
+    .switch {
+      position: relative;
+      display: inline-flex;
+      width: 42px;
+      height: 24px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider-toggle {
+      position: absolute;
+      inset: 0;
+      background: var(--border);
+      border-radius: 999px;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .slider-toggle::before {
+      content: '';
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      left: 3px;
+      top: 3px;
+      background: #fff;
+      border-radius: 50%;
+      transition: transform 0.2s;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    input:checked+.slider-toggle {
+      background: var(--primary);
+    }
+
+    input:checked+.slider-toggle::before {
+      transform: translateX(18px);
+    }
+
+    /* ── Status pill ── */
+    .status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: var(--surface);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--muted);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--border);
+    }
+
+    .status.active {
+      color: var(--active);
+      background: color-mix(in srgb, var(--active) 5%, var(--surface));
+      border-color: color-mix(in srgb, var(--active) 20%, transparent);
+    }
+
+    .status.active .status-dot {
+      background: var(--active);
+      box-shadow: 0 0 8px var(--active);
+    }
+
+    .status.inactive {
+      color: var(--inactive);
+      background: color-mix(in srgb, var(--inactive) 5%, var(--surface));
+      border-color: color-mix(in srgb, var(--inactive) 20%, transparent);
+    }
+
+    .status.inactive .status-dot {
+      background: var(--inactive);
+    }
+
+    /* ── Card ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 12px;
+    }
+
+    .row span {
+      font-size: 12.5px;
+      font-weight: 500;
+    }
+
+    /* ── Stepper controls ── */
+    .control {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .control-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .control-head label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .control-head label svg {
+      width: 14px;
+      height: 14px;
+      opacity: 0.8;
+    }
+
+    .val {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--primary);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .stepper {
+      display: flex;
+      align-items: center;
       gap: 10px;
     }
-    .status {
-      padding: 10px;
-      border-radius: 4px;
-      background-color: #f0f0f0;
-      margin-bottom: 10px;
-      min-height: 20px;
-    }
-    .status.error {
-      background-color: #ffebee;
-      color: #c62828;
-    }
-    .status.success {
-      background-color: #e8f5e9;
-      color: #2e7d32;
-    }
-    .button {
-      padding: 8px 16px;
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      border-radius: 4px;
+
+    .step-btn {
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
       cursor: pointer;
-      font-size: 14px;
-      transition: background-color 0.3s;
+      transition: all 0.2s;
     }
-    .button:hover {
-      background-color: #45a049;
+
+    .step-btn:hover {
+      background: var(--surface);
+      border-color: var(--primary);
+      color: var(--primary);
     }
-    .button:disabled {
-      background-color: #cccccc;
-      cursor: not-allowed;
+
+    .step-btn svg {
+      width: 14px;
+      height: 14px;
+      stroke-width: 2.5;
     }
-    .button.secondary {
-      background-color: #2196F3;
+
+    input[type="range"] {
+      flex: 1;
+      height: 6px;
+      border-radius: 6px;
+      appearance: none;
+      background: var(--border);
+      outline: none;
     }
-    .button.secondary:hover {
-      background-color: #1976D2;
-    }
-    .loading {
-      display: inline-block;
+
+    input[type="range"]::-webkit-slider-thumb {
+      appearance: none;
       width: 16px;
       height: 16px;
-      border: 2px solid #f3f3f3;
-      border-top: 2px solid #3498db;
       border-radius: 50%;
-      animation: spin 1s linear infinite;
-      margin-right: 8px;
-      vertical-align: middle;
+      background: var(--primary);
+      border: 2px solid var(--surface);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+      transition: transform 0.1s;
     }
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.1);
+    }
+
+    /* ── Button ── */
+    .btn {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: var(--radius);
+      background: var(--primary);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+    }
+
+    .btn:hover {
+      background: var(--primary-h);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 10px -1px rgba(37, 99, 235, 0.3);
+    }
+
+    .btn:active {
+      transform: translateY(0);
     }
   </style>
 </head>
+
 <body>
-  <div class="container">
-    <div class="status" id="status">
-      <div class="loading"></div>
-      Checking filters...
+  <div class="stack">
+    <div class="header">
+      <div class="header-brand">
+        <img src="icons/48.png" alt="Logo">
+        <h1>UI Blocker Pro</h1>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="powerToggle" checked>
+        <span class="slider-toggle"></span>
+      </label>
     </div>
-    <button class="button secondary" id="optionsBtn">Open Options</button>
+
+    <div class="status" id="status">
+      <span class="status-dot"></span>
+      <span id="statusText">System Ready</span>
+    </div>
+
+    <div class="card">
+      <div class="row">
+        <span>Apply Everywhere</span>
+        <label class="switch">
+          <input type="checkbox" id="globalMode">
+          <span class="slider-toggle"></span>
+        </label>
+      </div>
+
+      <div class="control">
+        <div class="control-head">
+          <label for="imageOpacity">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+              <circle cx="8.5" cy="8.5" r="1.5" />
+              <polyline points="21 15 16 10 5 21" />
+            </svg>
+            Photo Blocks
+          </label>
+          <span class="val" id="imageOpacityValue">30%</span>
+        </div>
+        <div class="stepper">
+          <button class="step-btn" data-input="imageOpacity" data-step="-1" title="Decrease">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M15 18l-6-6 6-6" />
+            </svg>
+          </button>
+          <input type="range" id="imageOpacity" min="0" max="100" value="30">
+          <button class="step-btn" data-input="imageOpacity" data-step="1" title="Increase">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M9 18l6-6-6-6" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="control">
+        <div class="control-head">
+          <label for="videoOpacity">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <polygon points="23 7 16 12 23 17 23 7" />
+              <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
+            </svg>
+            Video Blocks
+          </label>
+          <span class="val" id="videoOpacityValue">30%</span>
+        </div>
+        <div class="stepper">
+          <button class="step-btn" data-input="videoOpacity" data-step="-1" title="Decrease">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M15 18l-6-6 6-6" />
+            </svg>
+          </button>
+          <input type="range" id="videoOpacity" min="0" max="100" value="30">
+          <button class="step-btn" data-input="videoOpacity" data-step="1" title="Increase">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M9 18l6-6-6-6" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn" id="optionsBtn">Advanced Settings</button>
   </div>
   <script src="popup.js"></script>
 </body>
-</html> 
+
+</html>
